@@ -5,7 +5,7 @@ let itemsData;
 
 // TODO #2.1: Edit group number
 const getGroupNumber = () => {
-  return 99;
+  return 34;
 };
 
 // TODO #2.2: Show group members
@@ -28,7 +28,7 @@ const showGroupMembers = async () => {
           <li>${member.full_name}</li>
           `;
         // ----------------- FILL IN YOUR CODE UNDER THIS AREA ONLY ----------------- //
-        member_dropdown.innerHTML += ``;
+        member_dropdown.innerHTML += members;
         // ----------------- FILL IN YOUR CODE ABOVE THIS AREA ONLY ----------------- //
       });
     })
@@ -47,18 +47,23 @@ const showItemsInTable = (itemsData) => {
   const table_body = document.getElementById("main-table-body");
   table_body.innerHTML = "";
   // ----------------- FILL IN YOUR CODE UNDER THIS AREA ONLY ----------------- //
-
+   itemsData.sort((a,b) =>
+    a.created_data.toString().localeCompare(b.created_data.toString())
+  );
   // ----------------- FILL IN YOUR CODE ABOVE THIS AREA ONLY ----------------- //
   itemsData.map((item) => {
     // ----------------- FILL IN YOUR CODE UNDER THIS AREA ONLY ----------------- //
     table_body.innerHTML += `
         <tr id="${item.item_id}">
             <td>${item.item}</td>
+            <td>${item.name}</td>
+            <td>${item.price}</td>
             <td>Name</td>
             <td>Price</td>
             <td><button class="delete-row" onclick="deleteItem('${item.item_id}')">ลบ</button></td>
         </tr>
         `;
+    
     // ----------------- FILL IN YOUR CODE ABOVE THIS AREA ONLY ----------------- //
   });
 };
