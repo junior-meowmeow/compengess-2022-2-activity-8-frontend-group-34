@@ -28,7 +28,9 @@ const showGroupMembers = async () => {
           <li>${member.full_name}</li>
           `;
         // ----------------- FILL IN YOUR CODE UNDER THIS AREA ONLY ----------------- //
-        member_dropdown.innerHTML += `<option value=${member.full_name}>${member.full_name}</option>`;
+        member_dropdown.innerHTML += `
+          <option value='${member.full_name}'>${member.full_name}</option>
+        `;
         // ----------------- FILL IN YOUR CODE ABOVE THIS AREA ONLY ----------------- //
       });
     })
@@ -54,9 +56,9 @@ const showItemsInTable = (itemsData) => {
   const table_body = document.getElementById("main-table-body");
   table_body.innerHTML = "";
   // ----------------- FILL IN YOUR CODE UNDER THIS AREA ONLY ----------------- //
-  console.log(itemsData)
-  itemsData.sort((a,b) =>
-  a.created_date - b.created_date)
+  itemsData.sort((a, b) => {
+    return a.created_date - b.created_date;
+  });
   // ----------------- FILL IN YOUR CODE ABOVE THIS AREA ONLY ----------------- //
   itemsData.map((item) => {
     // ----------------- FILL IN YOUR CODE UNDER THIS AREA ONLY ----------------- //
@@ -77,43 +79,43 @@ const addItem = async () => {
   const item = document.getElementById("item-to-add").value;
   const name = document.getElementById("name-to-add").value;
   const price = document.getElementById("price-to-add").value;
+
+  const itemToAdd = {
+    item: item,
+    name: name,
+    price: price,
+  };
+
   const options = {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({
-      item,
-      name,
-      price
-    }),
-    headers:{
-      "Content-Type": "application/json"
-    }
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(itemToAdd),
   };
   await fetch(`http://${backendIPAddress}/items`, options)
-    .then((data) => {
-      window.location.reload()
+    .then((response) => {
+      document.getElementById("item-to-add").value = "";
+      document.getElementById("name-to-add").value = 0;
+      document.getElementById("price-to-add").value = "";
     })
     .catch((error) => console.error(error));
-  console.log(
-    "This function should fetch 'add item' route from backend server and update items in the table."
-  );
+  await getItemsFromDB();
+  showItemsInTable(itemsData);
 };
 
 // TODO 2.6: Send Delete an item ("DELETE") request to backend server and update items in the table
 const deleteItem = async (item_id) => {
   const options = {
     method: "DELETE",
-    credentials: "include"
+    credentials: "include",
   };
   await fetch(`http://${backendIPAddress}/items/${item_id}`, options)
-    .then((response) => response.json())
-    .then((data) => {
-      window.location.reload()
-    })
+    .then((response) => console.log(response))
     .catch((error) => console.error(error));
-  console.log(
-    "This function should fetch 'delete item' route in backend server and update items in the table."
-  );
+  await getItemsFromDB();
+  showItemsInTable(itemsData);
 };
 
 const redrawDOM = () => {
